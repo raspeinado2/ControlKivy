@@ -1,36 +1,26 @@
-name: Build Android APK
+[app]
+# Nombre visible de tu aplicación
+title = ControlKivy
 
-on:
-  push:
-    branches: [ main ]
+# Nombre del paquete y dominio inverso
+package.name = controlkivy
+package.domain = org.example
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+# Directorio donde está tu código
+source.dir = .
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
+# Extensiones que incluirá
+source.include_exts = py,png,jpg,kv
 
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y git python3-pip openjdk-8-jdk unzip zip \
-                                  build-essential libssl-dev libffi-dev \
-                                  libsqlite3-dev liblzma-dev libjpeg-dev zlib1g-dev
-          pip3 install --upgrade pip
-          pip3 install cython==0.29.37 buildozer
+# Versión de tu app
+version = 1.0
 
-      - name: Build APK
-        run: buildozer android debug
+# Dependencias
+requirements = python3,kivy
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: ControlKivy-debug-apk
-          path: bin/*.apk
+# Orientación
+orientation = portrait
 
+# Ajustes de log
+log_level = 2
+warn_on_root = 1
