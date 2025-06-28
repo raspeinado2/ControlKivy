@@ -1,44 +1,36 @@
-[app]
-# (Requerido) Nombre visible de tu aplicación
-title = ControlKivy
+name: Build Android APK
 
-# Nombre del paquete y dominio inverso
-package.name = controlkivy
-package.domain = org.example
+on:
+  push:
+    branches: [ main ]
 
-# (Requerido) Directorio donde está tu código (el punto significa raíz del proyecto)
-source.dir = .
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-# Extensiones de archivo que incluirá en la compilación
-source.include_exts = py,png,jpg,kv
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
 
-# (Requerido) Versión de tu app
-version = 1.0
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git python3-pip openjdk-8-jdk unzip zip \
+                                  build-essential libssl-dev libffi-dev \
+                                  libsqlite3-dev liblzma-dev libjpeg-dev zlib1g-dev
+          pip3 install --upgrade pip
+          pip3 install cython==0.29.37 buildozer
 
-# Dependencias Python y Kivy
-requirements = python3,kivy
+      - name: Build APK
+        run: buildozer android debug
 
-# Orientación de la pantalla
-orientation = portrait
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ControlKivy-debug-apk
+          path: bin/*.apk
 
-# (Opcional) Ajustes de registro
-log_level = 2
-warn_on_root = 1
-
-# ----------------------------------------
-# Las siguientes secciones son opcionales
-#
-# (Opcional) Icono de la app
-# icon.filename = icon.png
-#
-# (Opcional) Permisos Android
-# android.permissions = INTERNET,BLUETOOTH,BLUETOOTH_ADMIN
-#
-# (Opcional) SDK y NDK específicos
-# android.sdk = 24
-# android.ndk = 23b
-#
-# (Opcional) Grado de optimización de la APK
-# android.release = 1
-#
-# Fin de buildozer.spec
