@@ -8,11 +8,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-        name: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - uses: actions/setup-python@v4
-        name: Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
@@ -25,12 +25,31 @@ jobs:
           pip3 install --upgrade pip
           pip3 install cython==0.29.37 buildozer
 
+      - name: Install Android SDK components & accept licenses
+        run: |
+          # Ruta donde Buildozer baja el SDK
+          ANDROID_SDK_ROOT=$HOME/.buildozer/android/platform/android-sdk
+
+          # Instala commandlinetools si no existen
+          mkdir -p $ANDROID_SDK_ROOT/cmdline-tools
+          # (Buildozer ya debería haber descargado cmdline-tools, pero por si acaso)
+          # wget -qO- https://dl.google.com/android/repository/commandlinetools-linux-9472_latest.zip \
+          #   | bsdtar -xvf- -C $ANDROID_SDK_ROOT/cmdline-tools
+
+          # Acepta todas las licencias
+          yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=${ANDROID_SDK_ROOT} --licenses
+
+          # Instala las plataformas y build-tools que necesita Kivy
+          $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=${ANDROID_SDK_ROOT} \
+            "platform-tools" \
+            "platforms;android-33" \
+            "build-tools;33.0.0"
+
       - name: Build APK
         run: buildozer android debug
 
-      - uses: actions/upload-artifact@v4
-        name: Upload APK
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
         with:
           name: ControlKivy-debug-apk
           path: bin/*.apk
-
