@@ -1,24 +1,44 @@
 [app]
-# Título y paquete de tu aplicación
+# (Requerido) Nombre visible de tu aplicación
 title = ControlKivy
+
+# Nombre del paquete y dominio inverso
 package.name = controlkivy
 package.domain = org.example
 
-# Incluye tu código Python y recursos
+# (Requerido) Directorio donde está tu código (el punto significa raíz del proyecto)
+source.dir = .
+
+# Extensiones de archivo que incluirá en la compilación
 source.include_exts = py,png,jpg,kv
 
-# Dependencias
+# (Requerido) Versión de tu app
+version = 1.0
+
+# Dependencias Python y Kivy
 requirements = python3,kivy
 
-# Orientación y permisos (añade permisos bluetooth si los llegas a necesitar)
+# Orientación de la pantalla
 orientation = portrait
-# android.permissions = BLUETOOTH,BLUETOOTH_ADMIN
 
-# Ajustes de compilación
+# (Opcional) Ajustes de registro
 log_level = 2
 warn_on_root = 1
 
-# (Opcional) icono
+# ----------------------------------------
+# Las siguientes secciones son opcionales
+#
+# (Opcional) Icono de la app
 # icon.filename = icon.png
-
-# FIXME: Buildozer instalará la versión de SDK/NDK que necesite automáticamente
+#
+# (Opcional) Permisos Android
+# android.permissions = INTERNET,BLUETOOTH,BLUETOOTH_ADMIN
+#
+# (Opcional) SDK y NDK específicos
+# android.sdk = 24
+# android.ndk = 23b
+#
+# (Opcional) Grado de optimización de la APK
+# android.release = 1
+#
+# Fin de buildozer.spec
